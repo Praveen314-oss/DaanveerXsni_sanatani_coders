@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DaanveerXSni Sanatani Coders</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     WELCOME LOADER
+══════════════════════════════ -->
+<div id="welcome-loader">
+  <div class="wl-rings">
+    <div class="wl-ring r1"></div>
+    <div class="wl-ring r2"></div>
+    <div class="wl-ring r3"></div>
+  </div>
+  <canvas id="wl-canvas"></canvas>
+  <div class="wl-center">
+    <div class="wl-om">ॐ</div>
+    <p class="wl-welcome">Welcome to</p>
+    <div class="wl-name-wrap">
+      <div class="wl-name"><!-- chars injected by JS --></div>
+    </div>
+    <p class="wl-sanatani">Sanatani Coders</p>
+    <div class="wl-ticker-outer">
+      <div class="wl-ticker-track">
+        <span>बलिदानं परं धर्मः।</span>
+        <span>धर्म एव कर्म भवति।</span>
+        <span>बलिदानं परं धर्मः।</span>
+        <span>धर्म एव कर्म भवति।</span>
+      </div>
+    </div>
+    <div class="wl-prog-outer"><div class="wl-prog-bar" id="wl-prog"></div></div>
+    <p class="wl-entering">Entering the community…</p>
+  </div>
+</div>
+
+
+<!-- DHARMA FLOATING PARTICLES -->
+<div class="dharma-float" style="left:8%;--dur:22s;--del:0s">ॐ</div>
+<div class="dharma-float" style="left:25%;--dur:28s;--del:5s;font-size:20px">✦</div>
+<div class="dharma-float" style="left:45%;--dur:20s;--del:10s">ॐ</div>
+<div class="dharma-float" style="left:68%;--dur:25s;--del:3s;font-size:20px">✦</div>
+<div class="dharma-float" style="left:85%;--dur:18s;--del:8s">ॐ</div>
+
+<!-- PNG BACKGROUND IMAGE -->
+<div id="bg-image"></div>
+<div id="bg-video-overlay"></div>
+<!-- LOGO WATERMARK -->
+<div id="logo-watermark">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <defs>
+      <radialGradient id="wm-g" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#f0c040"/>
+        <stop offset="100%" stop-color="#5c6bc0"/>
+      </radialGradient>
+    </defs>
+    <!-- Outer ring -->
+    <circle cx="100" cy="100" r="92" fill="none" stroke="url(#wm-g)" stroke-width="2.5" stroke-dasharray="6 4" opacity="0.9"/>
+    <!-- Inner ring -->
+    <circle cx="100" cy="100" r="72" fill="none" stroke="#f0c040" stroke-width="1.5" opacity="0.6"/>
+    <!-- OM symbol / stylized D×S -->
+    <text x="100" y="88" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="46" font-weight="700" fill="#f0c040" opacity="0.95">D</text>
+    <text x="100" y="88" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="46" font-weight="700" fill="#f0c040" opacity="0.95">D</text>
+    <text x="138" y="88" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="700" fill="#ffe082" opacity="0.95">×</text>
+    <text x="165" y="88" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="46" font-weight="700" fill="#5c6bc0" opacity="0.95">S</text>
+    <text x="100" y="118" text-anchor="middle" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#b0bec5" letter-spacing="4" opacity="0.8">SANATANI</text>
+    <text x="100" y="133" text-anchor="middle" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#b0bec5" letter-spacing="4" opacity="0.8">CODERS</text>
+    <!-- Star decorations -->
+    <circle cx="52" cy="55" r="3" fill="#f0c040" opacity="0.7"/>
+    <circle cx="148" cy="55" r="3" fill="#f0c040" opacity="0.7"/>
+    <circle cx="52" cy="145" r="2" fill="#5c6bc0" opacity="0.6"/>
+    <circle cx="148" cy="145" r="2" fill="#5c6bc0" opacity="0.6"/>
+  </svg>
+</div>
+<!-- PARTICLE CANVAS -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- PAGE WIPE -->
+<div id="page-wipe"></div>
+
+<!-- ================================================================ HOME PAGE ================================================================ -->
+<div class="pg active" id="pg-home">
+  <!-- TAGLINE BANNER -->
+  <div class="sanskrit-banner">
+    <span class="sanskrit-text">
+      <span class="skt-dot">✦</span>
+      बलिदानं परं धर्मः।&nbsp;&nbsp;धर्म एव कर्म भवति।
+      <span class="skt-dot">✦</span>
+    </span>
+  </div>
+  <nav class="nav">
+    <span class="nav-brand" onclick="nav('home')">
+      <svg class="nav-logo-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" fill="none" stroke="#f0c040" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8"/>
+        <circle cx="20" cy="20" r="12" fill="none" stroke="#5c6bc0" stroke-width="1" opacity="0.5"/>
+        <text x="20" y="25" text-anchor="middle" font-family="serif" font-size="14" font-weight="700" fill="#f0c040">D&#xD7;</text>
+      </svg>
+      Daanveer<span class="x-mark">X</span>Sni <span style="color:var(--gold2);font-weight:600;letter-spacing:0.02em">Sanatani Coders</span>
+    </span>
+    <ul class="nav-links">
+      <li><a onclick="nav('about')">About</a></li>
+      <li><a onclick="nav('founders')">Founders</a></li>
+      <li><a onclick="nav('domains')">Domains</a></li>
+      <li><a onclick="nav('journey')">Journey</a></li>
+      <li><a onclick="nav('connect')" style="color:var(--gold)">Connect</a></li>
+    </ul>
+    <button class="btn btn-gold sparkle-btn" onclick="nav('connect')" style="padding:8px 18px;font-size:12px">Join Now →</button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-section">
+    <div class="hero-bg-orb orb1"></div>
+    <div class="hero-bg-orb orb2"></div>
+    <div class="hero-bg-orb orb3"></div>
+    <div class="hero-inner">
+      <div>
+        <p class="hero-eyebrow"><span class="community-name-hero">DaanveerXsni_Sanatani_Coders</span></p>
+        <h1 class="hero-h1">DaanveerXSni<br><em>Sanatani Coders</em></h1>
+        <p class="hero-sub anim-fadeup d4">A high-impact community where learners gain real guidance, curated opportunities, and a clear career path in technology. Founded by <strong>Praveen Rathod</strong> &amp; <strong>Snigdha Upadhyay</strong>.</p>
+        <div class="hero-tagline-strip anim-fadeup d3">
+          <span class="skt-line">बलिदानं परं धर्मः।</span>
+          <span class="skt-line">धर्म एव कर्म भवति।</span>
+        </div>
+        <div class="hero-cta-row" style="margin-top:1.6rem">
+          <button class="btn btn-gold sparkle-btn" onclick="nav('connect')">Join the Community →</button>
+          <button class="btn btn-ghost" onclick="nav('about')">Learn More</button>
+        </div>
+        <div class="anim-fadeup d6" style="display:flex;gap:12px;flex-wrap:wrap">
+          <span class="chip" style="background:rgba(240,192,64,0.12);color:#ffe082">✦ AI &amp; ML</span>
+          <span class="chip" style="background:rgba(0,188,212,0.12);color:#26c6da">✦ Cybersecurity</span>
+          <span class="chip" style="background:rgba(255,107,107,0.12);color:#ff8a80">✦ Full Stack Dev</span>
+          <span class="chip" style="background:rgba(92,107,192,0.12);color:#7986cb">✦ Career Paths</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="card-grid">
+          <div class="info-card c-gold anim-scale d4">
+            <div class="ic-icon ic-g">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d4a800" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            </div>
+            <p class="ic-label" style="color:#ffe082">Domains</p>
+            <p class="ic-val" id="cnt-dom">0</p>
+            <p class="ic-sub">tech tracks</p>
+          </div>
+          <div class="info-card c-teal anim-scale d5">
+            <div class="ic-icon ic-t">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0aacb8" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <p class="ic-label" style="color:#26c6da">Founders</p>
+            <p class="ic-val" id="cnt-fnd">0</p>
+            <p class="ic-sub">core team</p>
+          </div>
+          <div class="info-card c-coral anim-scale d6" style="grid-column:1/-1">
+            <div class="ic-icon ic-c">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#e05040" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <p class="ic-label" style="color:#ff8a80">Mission</p>
+            <p style="font-size:13px;line-height:1.65;color:var(--ink2);margin-top:4px">Simplify career paths — connecting learners to jobs, internships &amp; skills that actually matter.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item marquee-skt">बलिदानं परं धर्मः।</span>
+      <span class="marquee-item"><span>✦</span>Artificial Intelligence</span>
+      <span class="marquee-item"><span>✦</span>Machine Learning</span>
+      <span class="marquee-item"><span>✦</span>Cybersecurity</span>
+      <span class="marquee-item"><span>✦</span>Full Stack Development</span>
+      <span class="marquee-item"><span>✦</span>Career Mentorship</span>
+      <span class="marquee-item"><span>✦</span>Curated Opportunities</span>
+      <span class="marquee-item"><span>✦</span>Prompt Engineering</span>
+      <span class="marquee-item"><span>✦</span>LLMs &amp; AI Systems</span>
+      <span class="marquee-item"><span>✦</span>Ethical Hacking</span>
+      <span class="marquee-item"><span>✦</span>React &amp; Next.js</span>
+      <span class="marquee-item"><span>✦</span>Model Building</span>
+      <span class="marquee-item"><span>✦</span>CTF Prep</span>
+      <span class="marquee-item marquee-skt">बलिदानं परं धर्मः।</span>
+      <span class="marquee-item marquee-skt">धर्म एव कर्म भवति।</span>
+      <span class="marquee-item"><span>✦</span>Artificial Intelligence</span>
+      <span class="marquee-item"><span>✦</span>Machine Learning</span>
+      <span class="marquee-item"><span>✦</span>Cybersecurity</span>
+      <span class="marquee-item"><span>✦</span>Full Stack Development</span>
+      <span class="marquee-item"><span>✦</span>Career Mentorship</span>
+      <span class="marquee-item"><span>✦</span>Curated Opportunities</span>
+      <span class="marquee-item"><span>✦</span>Prompt Engineering</span>
+      <span class="marquee-item"><span>✦</span>LLMs &amp; AI Systems</span>
+      <span class="marquee-item"><span>✦</span>Ethical Hacking</span>
+      <span class="marquee-item"><span>✦</span>React &amp; Next.js</span>
+      <span class="marquee-item"><span>✦</span>Model Building</span>
+      <span class="marquee-item"><span>✦</span>CTF Prep</span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-box sb-gold reveal rd1">
+      <p class="stat-big sg" id="h-s1">0</p>
+      <p class="stat-label">tech domains with dedicated mentorship tracks</p>
+    </div>
+    <div class="stat-box sb-teal reveal rd2">
+      <p class="stat-big st" id="h-s2">0</p>
+      <p class="stat-label">dedicated founders with complementary expertise</p>
+    </div>
+    <div class="stat-box sb-coral reveal rd3">
+      <p class="stat-big sc">100%</p>
+      <p class="stat-label">genuine guidance — zero hollow content</p>
+    </div>
+    <div class="stat-box sb-navy reveal rd4">
+      <p class="stat-big sn">∞</p>
+      <p class="stat-label">learner growth potential — our north star</p>
+    </div>
+  </div>
+
+  <!-- EXPLORE LINKS -->
+  <div style="max-width:1100px;margin:0 auto;padding:0 2.5rem;position:relative;z-index:1">
+    <p style="text-align:center;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:1.5rem;font-weight:600">Explore the Community</p>
+    <div class="sec-card-grid">
+      <div class="sec-card sc-about reveal rd1" onclick="nav('about')">
+        <p class="sc-num">01</p>
+        <h2 class="sc-title">About Us</h2>
+        <p class="sc-desc">Our mission, values, founders, all domains, and the complete story of this community — all in one place.</p>
+        <span class="sc-tag tag-gold">Mission &amp; Vision</span>
+      </div>
+      <div class="sec-card sc-founders reveal rd2" onclick="nav('founders')">
+        <p class="sc-num">02</p>
+        <h2 class="sc-title">The Founders</h2>
+        <p class="sc-desc">Meet Praveen Rathod and Snigdha Upadhyay — the minds behind DaanveerXSni Sanatani Coders.</p>
+        <span class="sc-tag tag-teal">Leadership</span>
+      </div>
+      <div class="sec-card sc-domains reveal rd3" onclick="nav('domains')">
+        <p class="sc-num">03</p>
+        <h2 class="sc-title">Focus Domains</h2>
+        <p class="sc-desc">Four high-demand tech areas — AI, ML, Cybersecurity, and Full Stack Development.</p>
+        <span class="sc-tag tag-coral">Tech Tracks</span>
+      </div>
+      <div class="sec-card sc-journey reveal rd4" onclick="nav('journey')">
+        <p class="sc-num">04</p>
+        <h2 class="sc-title">Our Journey</h2>
+        <p class="sc-desc">From a bold idea to a trusted mentorship platform — the story of how we got here.</p>
+        <span class="sc-tag tag-navy">Timeline</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT SECTION (HOME) -->
+  <div class="sec-sep reveal" style="padding-top:5rem"><div class="sec-sep-line"></div><span class="sec-sep-label">About the Community</span><div class="sec-sep-line"></div></div>
+  <div class="section-wrap">
+    <div class="sec-header-row">
+      <div>
+        <p class="sec-eyebrow reveal">01 — About</p>
+        <h2 class="sec-title reveal rd1">Built for learners<br>who mean business</h2>
+      </div>
+      <p class="sec-sub reveal rd2">DaanveerXSni Sanatani Coders bridges the gap between ambition and opportunity for the next generation of tech professionals.</p>
+    </div>
+    <div class="about-home-grid">
+      <div class="prose-block reveal-left">
+        <p>In a landscape flooded with shallow content and scattered resources, this community was established as a reliable, structured, and genuinely impactful space where learners are not just pointed in a direction — they are actively guided through every step of their journey.</p>
+        <p>From curating high-quality job and internship leads to demystifying complex domains like AI, ML, Cybersecurity, and Full Stack Development, everything within this community is built around one question: <em>What does a learner actually need to move forward?</em></p>
+        <p>The community is not a passive broadcast channel — it is a living ecosystem of mentorship, knowledge, and community-driven momentum. Every post, every session, and every interaction is designed to create real, measurable career progress.</p>
+        <div class="pull-quote reveal rd3">"Not just a community — a career infrastructure for the ambitious."</div>
+      </div>
+      <div class="value-cards reveal-right">
+        <div class="val-card vc-gold rd1">
+          <div class="val-num gn">01</div>
+          <div class="val-text"><p>Curated Opportunities</p><p>Real jobs, internships and leads — not noise</p></div>
+        </div>
+        <div class="val-card vc-teal rd2">
+          <div class="val-num tn">02</div>
+          <div class="val-text"><p>Direct Mentorship</p><p>Guided by founders with practical expertise</p></div>
+        </div>
+        <div class="val-card vc-coral rd3">
+          <div class="val-num cn">03</div>
+          <div class="val-text"><p>Depth Over Breadth</p><p>Four focused tracks done properly</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOUNDERS (HOME) -->
+  <div class="sec-sep reveal"><div class="sec-sep-line"></div><span class="sec-sep-label">The Founders</span><div class="sec-sep-line"></div></div>
+  <div class="section-wrap">
+    <div class="sec-header-row">
+      <div>
+        <p class="sec-eyebrow reveal">02 — Founders</p>
+        <h2 class="sec-title reveal rd1">The people<br>behind the mission</h2>
+      </div>
+      <p class="sec-sub reveal rd2">Two individuals with complementary roles, a shared vision, and an unwavering commitment to learner growth.</p>
+    </div>
+    <div class="founders-grid">
+      <div class="founder-card reveal-left rd1">
+        <div class="fc-accent acc-pr"></div>
+        <div class="fc-top">
+          <div class="fc-avatar-img-wrap">
+            <img src="" alt="Praveen Rathod" class="fc-avatar-img" width="68" height="68"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+            <div class="fc-avatar av-pr" style="display:none">PR</div>
+          </div>
+          <p class="fc-name">Praveen Rathod</p>
+          <p class="fc-role">Founder &amp; Community Lead</p>
+          <span class="fc-alias"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Daanveer_protocol.exe</span>
+        </div>
+        <div class="fc-body">
+          <p class="fc-bio">Praveen defines the vision, strategy, and overall direction of the platform. He curates high-impact content, shares job and internship opportunities, and provides practical insights across AI, ML, Cybersecurity, and Full Stack Development.</p>
+          <p class="fc-bio" style="margin-top:0.8rem">Known in the community as "Daanveer_protocol.exe," his consistent involvement and deep commitment to learners is the engine that drives the entire ecosystem forward.</p>
+          <div class="fc-tags">
+            <span class="ftag" style="background:rgba(240,192,64,0.12);color:#ffe082">Vision &amp; Strategy</span>
+            <span class="ftag" style="background:rgba(0,188,212,0.12);color:#26c6da">AI / ML</span>
+            <span class="ftag" style="background:rgba(255,107,107,0.12);color:#ff8a80">Cybersecurity</span>
+            <span class="ftag" style="background:rgba(92,107,192,0.12);color:#7986cb">Full Stack</span>
+            <span class="ftag" style="background:rgba(7,18,55,0.58);color:var(--ink2)">Career Guidance</span>
+          </div>
+        </div>
+      </div>
+      <div class="founder-card reveal-right rd2">
+        <div class="fc-accent acc-sn"></div>
+        <div class="fc-top">
+          <div class="fc-avatar av-sn" style="animation-delay:1.5s">SU</div>
+          <p class="fc-name">Snigdha Upadhyay</p>
+          <p class="fc-role">Co-Founder &amp; Operations Lead</p>
+          <span class="fc-alias"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83"/></svg>Operations Core</span>
+        </div>
+        <div class="fc-body">
+          <p class="fc-bio">Snigdha executes the vision and ensures the smooth functioning of the platform. Her focus lies in maintaining consistency, strengthening engagement, and enhancing the overall experience of the community.</p>
+          <p class="fc-bio" style="margin-top:0.8rem">Through a structured and organized approach, she contributes to building a reliable, growth-oriented environment where every member feels genuinely supported.</p>
+          <div class="fc-tags">
+            <span class="ftag" style="background:rgba(0,188,212,0.12);color:#26c6da">Operations</span>
+            <span class="ftag" style="background:rgba(240,192,64,0.12);color:#ffe082">Engagement</span>
+            <span class="ftag" style="background:rgba(171,71,188,0.12);color:#ce93d8">Content Strategy</span>
+            <span class="ftag" style="background:rgba(7,18,55,0.58);color:var(--ink2)">Community Growth</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOMAINS (HOME) -->
+  <div class="sec-sep reveal"><div class="sec-sep-line"></div><span class="sec-sep-label">Focus Domains</span><div class="sec-sep-line"></div></div>
+  <div class="section-wrap">
+    <div class="sec-header-row">
+      <div>
+        <p class="sec-eyebrow reveal">03 — Domains</p>
+        <h2 class="sec-title reveal rd1">Where we<br>guide you</h2>
+      </div>
+      <p class="sec-sub reveal rd2">Four high-demand, high-growth areas of technology. Mentorship, resources, and opportunities curated specifically within each track.</p>
+    </div>
+    <div class="domains-grid">
+      <div class="dom-card dc-ai reveal rd1">
+        <div class="dom-icon di-ai">🤖</div>
+        <p class="dom-num">01 / Artificial Intelligence</p>
+        <p class="dom-title">Artificial Intelligence</p>
+        <p class="dom-desc">Concepts, tools, frameworks, and career paths in modern AI — from fundamentals and prompt engineering to applied systems, LLMs, and production-grade AI pipelines.</p>
+        <div class="dom-skills"><span class="dsk">Prompt Engineering</span><span class="dsk">LLMs</span><span class="dsk">AI Career Paths</span><span class="dsk">Applied AI</span></div>
+      </div>
+      <div class="dom-card dc-ml reveal rd2">
+        <div class="dom-icon di-ml">📊</div>
+        <p class="dom-num">02 / Machine Learning</p>
+        <p class="dom-title">Machine Learning</p>
+        <p class="dom-desc">Practical ML skills — model building, datasets, evaluation, and real internship opportunities. We break down the math and implementation so you can build, deploy, and get hired.</p>
+        <div class="dom-skills"><span class="dsk">Model Building</span><span class="dsk">Datasets</span><span class="dsk">Internships</span><span class="dsk">ML Research</span></div>
+      </div>
+      <div class="dom-card dc-cy reveal rd3">
+        <div class="dom-icon di-cy">🔐</div>
+        <p class="dom-num">03 / Cybersecurity</p>
+        <p class="dom-title">Cybersecurity</p>
+        <p class="dom-desc">Ethical hacking, security fundamentals, certifications roadmap, CTF preparation, and real-world threat landscapes. Whether you want to defend or break things (legally), we cover it.</p>
+        <div class="dom-skills"><span class="dsk">Ethical Hacking</span><span class="dsk">CTF Prep</span><span class="dsk">Certifications</span><span class="dsk">Network Security</span></div>
+      </div>
+      <div class="dom-card dc-fs reveal rd4">
+        <div class="dom-icon di-fs">⚡</div>
+        <p class="dom-num">04 / Full Stack Development</p>
+        <p class="dom-title">Full Stack Dev</p>
+        <p class="dom-desc">Frontend to backend — frameworks, databases, deployment, and job-ready project guidance. We help you build real things, ship them, and talk about them in interviews confidently.</p>
+        <div class="dom-skills"><span class="dsk">React / Next.js</span><span class="dsk">Node / Express</span><span class="dsk">Databases</span><span class="dsk">Deployment</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOURNEY (HOME) -->
+  <div class="sec-sep reveal"><div class="sec-sep-line"></div><span class="sec-sep-label">Our Journey</span><div class="sec-sep-line"></div></div>
+  <div class="section-wrap">
+    <div class="sec-header-row">
+      <div>
+        <p class="sec-eyebrow reveal">04 — Journey</p>
+        <h2 class="sec-title reveal rd1">How we<br>got here</h2>
+      </div>
+      <p class="sec-sub reveal rd2">From a spark of an idea to a trusted mentorship platform — the milestones that shaped DaanveerXSni Sanatani Coders.</p>
+    </div>
+    <div class="journey-home">
+      <div class="tl reveal-left">
+        <div class="tl-item" id="jti1"><div class="tl-dot tl-d-gold"></div><span class="tl-badge yb-gold">Origin</span><p class="tl-h">The idea takes shape</p><p class="tl-p">Praveen recognized a consistent gap — passionate learners surrounded by noise, with no reliable space for structured, honest career guidance.</p></div>
+        <div class="tl-item" id="jti2"><div class="tl-dot tl-d-teal"></div><span class="tl-badge yb-teal">Foundation</span><p class="tl-h">DaanveerXSni Sanatani Coders is established</p><p class="tl-p">With Snigdha Upadhyay joining as Co-Founder and Operations Lead, the community was formally established with a defined mission and clear domain focus.</p></div>
+        <div class="tl-item" id="jti3"><div class="tl-dot tl-d-coral"></div><span class="tl-badge yb-coral">Growth</span><p class="tl-h">Mentorship, opportunities, consistency</p><p class="tl-p">Active curation of job leads, internship opportunities, and domain-specific knowledge across AI, ML, Cybersecurity, and Full Stack — with both founders directly guiding members.</p></div>
+        <div class="tl-item" id="jti4"><div class="tl-dot tl-d-navy"></div><span class="tl-badge yb-navy">Now</span><p class="tl-h">A trusted space for serious learners</p><p class="tl-p">The community continues to grow as a trusted platform where learners make confident, informed career decisions backed by real mentorship and curated resources.</p></div>
+      </div>
+      <div class="journey-right-cards reveal-right">
+        <div class="jrc rd1"><p class="jrc-num" style="color:var(--gold)">4</p><p class="jrc-label">tech domains with dedicated mentorship and curated resources</p></div>
+        <div class="jrc rd2"><p class="jrc-num" style="color:var(--teal)">2</p><p class="jrc-label">founders bringing complementary expertise to every learner</p></div>
+        <div class="jrc rd3"><p class="jrc-num" style="color:var(--coral)">100%</p><p class="jrc-label">genuine guidance — zero filler, zero hollow content</p></div>
+        <div class="jrc rd4"><p class="jrc-num" style="color:var(--navy)">∞</p><p class="jrc-label">learner potential that we are committed to unlock</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECT (HOME) -->
+  <div class="sec-sep reveal"><div class="sec-sep-line"></div><span class="sec-sep-label">Connect With Us</span><div class="sec-sep-line"></div></div>
+  <div class="section-wrap">
+    <div class="sec-header-row">
+      <div>
+        <p class="sec-eyebrow reveal">05 — Connect</p>
+        <h2 class="sec-title reveal rd1">Ready to grow<br>with us?</h2>
+      </div>
+      <p class="sec-sub reveal rd2">Whether you are seeking career direction, internship opportunities, or a community of driven learners — reach out and start moving forward.</p>
+    </div>
+    <div class="connect-grid">
+      <a class="con-card cc-ig reveal rd1" href="https://www.instagram.com/daanveerxsni_sanatani_coders?igsh=MWZlY3BvMnByNGxoNg==" target="_blank">
+        <span class="con-arrow">↗</span>
+        <div class="con-icon ci-ig"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e91e8c" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#e91e8c" stroke="none"/></svg></div>
+        <p class="con-title">Instagram</p>
+        <p class="con-handle">@daanveerxsni_sanatani_coders</p>
+        <p class="con-desc">Follow for daily updates, curated opportunities, domain insights, and community highlights.</p>
+      </a>
+      <a class="con-card cc-wa reveal rd2" href="https://chat.whatsapp.com/CHXaIUi51GrLI4ytV8Vptc" target="_blank">
+        <span class="con-arrow">↗</span>
+        <div class="con-icon ci-wa"><svg width="22" height="22" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+        <p class="con-title">WhatsApp</p>
+        <p class="con-handle">Direct message</p>
+        <p class="con-desc">Chat directly with the community for quick questions, mentorship requests, or career guidance.</p>
+      </a>
+      <a class="con-card cc-em reveal rd3" href="mailto:suryaputrakarn24680@gmail.com">
+        <span class="con-arrow">↗</span>
+        <div class="con-icon ci-em"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1976d2" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></div>
+        <p class="con-title">Email</p>
+        <p class="con-handle">suryaputrakarn24680@gmail.com</p>
+        <p class="con-desc">For detailed queries, collaboration proposals, or formal outreach. Every message gets a thoughtful reply.</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- JOIN BANNER -->
+  <div style="max-width:1100px;margin:0 auto;padding:0 2.5rem 5rem;position:relative;z-index:1">
+    <div class="join-banner reveal">
+      <div class="join-banner-inner">
+        <p class="join-tagline">बलिदानं परं धर्मः। &nbsp;·&nbsp; धर्म एव कर्म भवति।</p>
+    <p class="join-eyebrow">✦ Open to All Learners</p>
+        <h2 class="join-title">Start your journey with<br><em>DaanveerXSni</em></h2>
+        <p class="join-sub">No prerequisites — just ambition and a willingness to grow. Join a community that will genuinely move your career forward.</p>
+        <div class="join-btns">
+          <a class="btn btn-ig sparkle-btn" href="https://www.instagram.com/daanveerxsni_sanatani_coders?igsh=MWZlY3BvMnByNGxoNg==" target="_blank">📸 Follow on Instagram →</a>
+          <a class="btn btn-outline-white" href="https://chat.whatsapp.com/CHXaIUi51GrLI4ytV8Vptc" target="_blank">WhatsApp Community</a>
+          <a class="btn btn-outline-white" href="https://t.me/+FL8KI9sOIQw2MTZl" target="_blank">Telegram →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span class="foot-brand">Daanveer<span>X</span>Sni Sanatani Coders</span>
+    <span class="foot-copy">Founded by Praveen Rathod &amp; Snigdha Upadhyay<br><span class="foot-tagline">बलिदानं परं धर्मः। &nbsp; धर्म एव कर्म भवति।</span></span>
+    <div class="foot-social">
+      <a class="fsoc" href="https://www.instagram.com/daanveerxsni_sanatani_coders?igsh=MWZlY3BvMnByNGxoNg==" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a>
+      <a class="fsoc" href="https://chat.whatsapp.com/CHXaIUi51GrLI4ytV8Vptc" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      <a class="fsoc" href="https://t.me/+FL8KI9sOIQw2MTZl" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.5l-2.95-.924c-.64-.203-.658-.64.136-.954l11.57-4.46c.535-.194 1.002.13.968.059z"/></svg></a>
+      <a class="fsoc" href="mailto:suryaputrakarn24680@gmail.com"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></a>
+    </div>
+  </footer>
+</div>
+
+<!-- ================================================================ ABOUT PAGE (MEGA — ALL INFO) ================================================================ -->
+<div class="pg" id="pg-about">
+  <div id="nav-about"></div>
+
+  <div class="page-hero">
+    <p class="page-eyebrow anim-slide d1">01 — About</p>
+    <h1 class="page-title anim-fadeup d2">Everything you need<br>to know about us</h1>
+    <p class="page-sub anim-fadeup d3">The complete guide to DaanveerXSni Sanatani Coders — our mission, founders, domains, journey, and how to connect. One page, zero compromise.</p>
+  </div>
+
+  <div class="page-body" style="max-width:1100px">
+
+    <!-- MISSION & VISION -->
+    <div class="about-mega-grid">
+      <div class="prose-block anim-fadeup d1">
+        <p class="sec-eyebrow" style="margin-bottom:0.5rem">Mission &amp; Vision</p>
+        <p style="font-size:22px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.2rem">Built for learners who mean business</p>
+        <p>In a landscape flooded with shallow content and scattered resources, this community was established as a reliable, structured, and genuinely impactful space where learners are not just pointed in a direction — they are actively guided through every step of their journey.</p>
+        <p>From curating high-quality job and internship leads to demystifying complex domains like AI, ML, Cybersecurity, and Full Stack Development, everything within this community is built around one question: <em>What does a learner actually need to move forward?</em></p>
+        <p>The community is not a passive broadcast channel — it is a living ecosystem of mentorship, knowledge, and community-driven momentum. Every post, every session, and every interaction is designed to create real, measurable career progress.</p>
+        <div class="pull-quote" style="margin-top:1.5rem">"Not just a community — a career infrastructure for the ambitious."</div>
+      </div>
+      <div class="anim-fadeup d2" style="display:flex;flex-direction:column;gap:13px">
+        <div class="val-card vc-gold">
+          <div class="val-num gn">01</div>
+          <div class="val-text"><p>Curated Opportunities</p><p>Real jobs, internships and leads — not noise. Filtered for quality and relevance to our community.</p></div>
+        </div>
+        <div class="val-card vc-teal">
+          <div class="val-num tn">02</div>
+          <div class="val-text"><p>Direct Mentorship</p><p>Guided personally by founders with practical, real-world expertise in their fields.</p></div>
+        </div>
+        <div class="val-card vc-coral">
+          <div class="val-num cn">03</div>
+          <div class="val-text"><p>Depth Over Breadth</p><p>Four focused tracks done properly — no spray-and-pray approach to learning.</p></div>
+        </div>
+        <div class="val-card vc-navy">
+          <div class="val-num nn">04</div>
+          <div class="val-text"><p>Impact Over Vanity</p><p>Real career progress measured by outcomes, not follower counts or hollow metrics.</p></div>
+        </div>
+        <div class="val-card vc-purple">
+          <div class="val-num pn">05</div>
+          <div class="val-text"><p>Community-First</p><p>A living ecosystem where every member's growth fuels the collective momentum.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="ach-strip anim-scale d2" style="border-top:1px solid var(--paper3);padding-top:3rem;margin-top:0">
+      <div class="ach-box"><p class="ach-big an-gold" id="a1">0</p><p class="ach-lbl">tech domains with dedicated mentorship tracks</p></div>
+      <div class="ach-box"><p class="ach-big an-teal" id="a2">0</p><p class="ach-lbl">dedicated founders with complementary expertise</p></div>
+      <div class="ach-box"><p class="ach-big an-coral">100%</p><p class="ach-lbl">genuine guidance — zero hollow content</p></div>
+      <div class="ach-box"><p class="ach-big an-navy">∞</p><p class="ach-lbl">learner growth potential — our north star</p></div>
+    </div>
+
+    <div class="about-full-divider"></div>
+
+    <!-- FOUNDERS -->
+    <p class="sec-eyebrow reveal" style="margin-bottom:0.5rem">The Founders</p>
+    <h2 class="about-section-title reveal rd1" style="margin-top:0">The people behind the mission</h2>
+    <p class="about-section-sub reveal rd2">Two individuals with complementary roles, a shared vision, and an unwavering commitment to learner growth — DaanveerXSni was built on their combined energy.</p>
+    <div class="founders-compact-grid">
+      <div class="founder-compact-card fcc-pr reveal-left rd1">
+        <div class="fcc-top">
+          <div class="fcc-av fcc-av-pr">PR</div>
+          <div>
+            <p class="fcc-info-name">Praveen Rathod</p>
+            <p class="fcc-info-role">Founder &amp; Community Lead</p>
+          </div>
+        </div>
+        <p class="fcc-bio">Praveen defines the vision, strategy, and overall direction of the platform. He curates high-impact content, shares job and internship opportunities, and provides practical insights across AI, ML, Cybersecurity, and Full Stack Development. Known in the community as "Daanveer_protocol.exe," his consistent involvement and deep commitment to learners is the engine that drives the entire ecosystem forward. He believes in simplifying complex career paths and enabling individuals to make informed, confident decisions.</p>
+        <div class="fcc-tags">
+          <span class="ftag" style="background:rgba(240,192,64,0.12);color:#ffe082">Vision &amp; Strategy</span>
+          <span class="ftag" style="background:rgba(0,188,212,0.12);color:#26c6da">AI / ML</span>
+          <span class="ftag" style="background:rgba(255,107,107,0.12);color:#ff8a80">Cybersecurity</span>
+          <span class="ftag" style="background:rgba(92,107,192,0.12);color:#7986cb">Full Stack</span>
+          <span class="ftag" style="background:rgba(7,18,55,0.58);color:var(--ink2)">Career Guidance</span>
+        </div>
+      </div>
+      <div class="founder-compact-card fcc-sn reveal-right rd2">
+        <div class="fcc-top">
+          <div class="fcc-av fcc-av-sn">SU</div>
+          <div>
+            <p class="fcc-info-name">Snigdha Upadhyay</p>
+            <p class="fcc-info-role">Co-Founder &amp; Operations Lead</p>
+          </div>
+        </div>
+        <p class="fcc-bio">Snigdha executes the vision and ensures the smooth functioning of the platform. Her focus lies in maintaining consistency, strengthening engagement, and enhancing the overall experience of the community. She works on streamlining communication, supporting individuals throughout their learning journey, and ensuring that valuable content and opportunities are delivered effectively. Through a structured and organized approach, she builds a reliable, growth-oriented environment where every member feels genuinely supported.</p>
+        <div class="fcc-tags">
+          <span class="ftag" style="background:rgba(0,188,212,0.12);color:#26c6da">Operations</span>
+          <span class="ftag" style="background:rgba(240,192,64,0.12);color:#ffe082">Engagement</span>
+          <span class="ftag" style="background:rgba(171,71,188,0.12);color:#ce93d8">Content Strategy</span>
+          <span class="ftag" style="background:rgba(7,18,55,0.58);color:var(--ink2)">Community Growth</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-full-divider"></div>
+
+    <!-- DOMAINS -->
+    <p class="sec-eyebrow reveal" style="margin-bottom:0.5rem">Focus Domains</p>
+    <h2 class="about-section-title reveal rd1" style="margin-top:0">Where we guide you</h2>
+    <p class="about-section-sub reveal rd2">Four high-demand, high-growth areas of technology. Each domain comes with structured mentorship, curated resources, real job leads, and hands-on guidance from our founders.</p>
+    <div class="domains-about-grid">
+      <div class="domain-about-card dac-ai reveal rd1">
+        <div class="dac-header">
+          <div class="dac-icon di-ai">🤖</div>
+          <p class="dac-title">Artificial Intelligence</p>
+        </div>
+        <p class="dac-desc">Concepts, tools, frameworks, and career paths in modern AI — from fundamentals and prompt engineering to applied systems, LLMs, and production-grade AI pipelines. We guide you from curious to capable, covering everything from theory to real-world deployment. Stay ahead with the latest in generative AI, agent-based systems, and AI-powered product development.</p>
+        <div class="dac-skills">
+          <span class="dac-skill" style="background:rgba(240,192,64,0.12);color:#ffe082">Prompt Engineering</span>
+          <span class="dac-skill" style="background:rgba(240,192,64,0.12);color:#ffe082">LLMs</span>
+          <span class="dac-skill" style="background:rgba(240,192,64,0.12);color:#ffe082">AI Career Paths</span>
+          <span class="dac-skill" style="background:rgba(240,192,64,0.12);color:#ffe082">Applied AI</span>
+          <span class="dac-skill" style="background:rgba(240,192,64,0.12);color:#ffe082">GenAI Tools</span>
+        </div>
+      </div>
+      <div class="domain-about-card dac-ml reveal rd2">
+        <div class="dac-header">
+          <div class="dac-icon di-ml">📊</div>
+          <p class="dac-title">Machine Learning</p>
+        </div>
+        <p class="dac-desc">Practical ML skills — model building, datasets, evaluation, and real internship opportunities. We break down the math and the implementation so you can build, deploy, and get hired in ML. Deep dives into supervised, unsupervised, and reinforcement learning with hands-on project guidance and a clear path to ML roles at top companies.</p>
+        <div class="dac-skills">
+          <span class="dac-skill" style="background:rgba(0,188,212,0.12);color:#26c6da">Model Building</span>
+          <span class="dac-skill" style="background:rgba(0,188,212,0.12);color:#26c6da">Datasets</span>
+          <span class="dac-skill" style="background:rgba(0,188,212,0.12);color:#26c6da">Internships</span>
+          <span class="dac-skill" style="background:rgba(0,188,212,0.12);color:#26c6da">ML Research</span>
+          <span class="dac-skill" style="background:rgba(0,188,212,0.12);color:#26c6da">Python / PyTorch</span>
+        </div>
+      </div>
+      <div class="domain-about-card dac-cy reveal rd3">
+        <div class="dac-header">
+          <div class="dac-icon di-cy">🔐</div>
+          <p class="dac-title">Cybersecurity</p>
+        </div>
+        <p class="dac-desc">Ethical hacking, security fundamentals, certifications roadmap, CTF preparation, and real-world threat landscapes. Whether you want to defend or break things (legally), we have you covered. From beginner network security to advanced penetration testing — we provide structured paths to certifications like CEH, OSCP, and CompTIA Security+.</p>
+        <div class="dac-skills">
+          <span class="dac-skill" style="background:rgba(255,107,107,0.12);color:#ff8a80">Ethical Hacking</span>
+          <span class="dac-skill" style="background:rgba(255,107,107,0.12);color:#ff8a80">CTF Prep</span>
+          <span class="dac-skill" style="background:rgba(255,107,107,0.12);color:#ff8a80">Certifications</span>
+          <span class="dac-skill" style="background:rgba(255,107,107,0.12);color:#ff8a80">Network Security</span>
+          <span class="dac-skill" style="background:rgba(255,107,107,0.12);color:#ff8a80">Penetration Testing</span>
+        </div>
+      </div>
+      <div class="domain-about-card dac-fs reveal rd4">
+        <div class="dac-header">
+          <div class="dac-icon di-fs">⚡</div>
+          <p class="dac-title">Full Stack Development</p>
+        </div>
+        <p class="dac-desc">Frontend to backend — frameworks, databases, deployment, and job-ready project guidance. We help you build things that are real, ship them, and talk about them in interviews confidently. Covering modern stacks including React, Next.js, Node.js, databases, cloud deployment, and everything needed to land a dev role or build your own product.</p>
+        <div class="dac-skills">
+          <span class="dac-skill" style="background:rgba(92,107,192,0.12);color:#7986cb">React / Next.js</span>
+          <span class="dac-skill" style="background:rgba(92,107,192,0.12);color:#7986cb">Node / Express</span>
+          <span class="dac-skill" style="background:rgba(92,107,192,0.12);color:#7986cb">Databases</span>
+          <span class="dac-skill" style="background:rgba(92,107,192,0.12);color:#7986cb">Deployment</span>
+          <span class="dac-skill" style="background:rgba(92,107,192,0.12);color:#7986cb">System Design</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-full-divider"></div>
+
+    <!-- JOURNEY -->
+    <p class="sec-eyebrow reveal" style="margin-bottom:0.5rem">Our Journey</p>
+    <h2 class="about-section-title reveal rd1" style="margin-top:0">How we got here</h2>
+    <p class="about-section-sub reveal rd2">From a spark of an idea to a trusted mentorship platform — the milestones that shaped DaanveerXSni Sanatani Coders into what it is today.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start">
+      <div class="timeline-about reveal-left">
+        <div class="tla-item">
+          <div class="tla-dot tl-d-gold"></div>
+          <span class="tl-badge yb-gold" style="margin-bottom:0.5rem;display:inline-block">Origin</span>
+          <p class="tl-h">The idea takes shape</p>
+          <p class="tl-p">Praveen recognized a consistent gap — passionate learners surrounded by noise, with no reliable space for structured, honest career guidance. The concept of a dedicated, mentor-led community was born from that frustration.</p>
+        </div>
+        <div class="tla-item">
+          <div class="tla-dot tl-d-teal"></div>
+          <span class="tl-badge yb-teal" style="margin-bottom:0.5rem;display:inline-block">Foundation</span>
+          <p class="tl-h">DaanveerXSni is established</p>
+          <p class="tl-p">With Snigdha Upadhyay joining as Co-Founder and Operations Lead, the community was formally established. A defined mission, clear domain focus, and a commitment to impact over vanity metrics set the tone from day one.</p>
+        </div>
+        <div class="tla-item">
+          <div class="tla-dot tl-d-coral"></div>
+          <span class="tl-badge yb-coral" style="margin-bottom:0.5rem;display:inline-block">Growth</span>
+          <p class="tl-h">Mentorship, opportunities, consistency</p>
+          <p class="tl-p">The community began actively curating job leads, internship opportunities, and domain-specific knowledge across AI, ML, Cybersecurity, and Full Stack Development. Both founders directly involved in guiding members through every step.</p>
+        </div>
+        <div class="tla-item">
+          <div class="tla-dot tl-d-navy"></div>
+          <span class="tl-badge yb-navy" style="margin-bottom:0.5rem;display:inline-block">Now</span>
+          <p class="tl-h">A trusted space for serious learners</p>
+          <p class="tl-p">The community continues to grow as a trusted platform where learners make confident, informed career decisions — backed by real mentorship, curated resources, and a structured approach to long-term growth.</p>
+        </div>
+      </div>
+      <div class="journey-right-cards reveal-right">
+        <div class="jrc rd1"><p class="jrc-num" style="color:var(--gold)">4</p><p class="jrc-label">tech domains with dedicated mentorship and curated resources for each path</p></div>
+        <div class="jrc rd2"><p class="jrc-num" style="color:var(--teal)">2</p><p class="jrc-label">founders bringing complementary expertise — strategy meets execution</p></div>
+        <div class="jrc rd3"><p class="jrc-num" style="color:var(--coral)">100%</p><p class="jrc-label">genuine guidance — zero filler, zero hollow content, ever</p></div>
+        <div class="jrc rd4"><p class="jrc-num" style="color:var(--navy)">∞</p><p class="jrc-label">learner potential that we are committed to unlock every single day</p></div>
+      </div>
+    </div>
+
+    <div class="about-full-divider"></div>
+
+    <!-- CONNECT -->
+    <p class="sec-eyebrow reveal" style="margin-bottom:0.5rem">Connect With Us</p>
+    <h2 class="about-section-title reveal rd1" style="margin-top:0">Ready to grow with us?</h2>
+    <p class="about-section-sub reveal rd2">Whether you are seeking career direction, internship opportunities, or a community of driven learners — reach out and start moving forward. All channels are monitored by the founders personally.</p>
+    <div class="connect-about-grid">
+      <a class="ca-card cc-ig reveal rd1" href="https://www.instagram.com/daanveerxsni_sanatani_coders?igsh=MWZlY3BvMnByNGxoNg==" target="_blank">
+        <div class="ca-icon ci-ig"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e91e8c" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#e91e8c" stroke="none"/></svg></div>
+        <p class="ca-title">Instagram</p>
+        <p class="ca-handle">@daanveerxsni_sanatani_coders</p>
+        <p class="ca-desc">Daily updates, curated opportunities, domain insights, and community highlights.</p>
+      </a>
+      <a class="ca-card cc-wa reveal rd2" href="https://chat.whatsapp.com/CHXaIUi51GrLI4ytV8Vptc" target="_blank">
+        <div class="ca-icon ci-wa"><svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+        <p class="ca-title">WhatsApp</p>
+        <p class="ca-handle">Direct message</p>
+        <p class="ca-desc">Quick questions, mentorship requests, or career guidance — direct to the founders.</p>
+      </a>
+      <a class="ca-card cc-em reveal rd3" href="mailto:suryaputrakarn24680@gmail.com">
+        <div class="ca-icon ci-em"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1976d2" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></div>
+        <p class="ca-title">Email</p>
+        <p class="ca-handle">suryaputrakarn24680@gmail.com</p>
+        <p class="ca-desc">For detailed queries, collaboration proposals, or formal outreach. Every message answered.</p>
+      </a>
+      <a class="ca-card cc-tg reveal rd4" href="https://t.me/+FL8KI9sOIQw2MTZl" target="_blank">
+        <div class="ca-icon ci-tg"><svg width="20" height="20" viewBox="0 0 24 24" fill="#2196f3"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.5l-2.95-.924c-.64-.203-.658-.64.136-.954l11.57-4.46c.535-.194 1.002.13.968.059z"/></svg></div>
+        <p class="ca-title">Telegram</p>
+        <p class="ca-handle">Join our channel</p>
+        <p class="ca-desc">Instant updates, resources, and community connection. Real-time opportunities on Telegram.</p>
+      </a>
+    </div>
+
+    <div style="margin-top:3rem;margin-bottom:2rem">
+      <div class="join-banner reveal">
+        <div class="join-banner-inner">
+          <p class="join-tagline">बलिदानं परं धर्मः। &nbsp;·&nbsp; धर्म एव कर्म भवति।</p>
+    <p class="join-eyebrow">✦ Open to All Learners</p>
+          <h2 class="join-title">Start your journey with <em>DaanveerXSni</em></h2>
+          <p class="join-sub">No prerequisites — just ambition and a willingness to grow. This community is built for you.</p>
+          <div class="join-btns">
+            <a class="btn btn-ig sparkle-btn" href="https://www.instagram.com/daanveerxsni_sanatani_coders?igsh=MWZlY3BvMnByNGxoNg==" target="_blank">📸 Follow on Instagram →</a>
+            <a class="btn btn-outline-white" href="https://chat.whatsapp.com/CHXaIUi51GrLI4ytV8Vptc" target="_blank">WhatsApp Community</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="foot-about"></div>
+</div>
+
+<!-- ================================================================ FOUNDERS PAGE ================================================================ -->
+<div class="pg" id="pg-founders">
+  <div id="nav-founders"></div>
+  <div class="page-hero">
+    <p class="page-eyebrow anim-slide d1">02 — Founders</p>
+    <h1 class="page-title anim-fadeup d2">The people<br>behind the mission</h1>
+    <p class="page-sub anim-fadeup d3">Two individuals with complementary roles, a shared vision, and an unwavering commitment to learner growth. Every decision in this community passes through their personal dedication.</p>
+  </div>
+  <div class="page-body">
+    <div class="founders-hero-grid">
+      <div class="founder-full-card anim-fadeup d2">
+        <div class="ffc-accent acc-pr"></div>
+        <div class="ffc-top">
+          <div class="ffc-avatar av-pr">PR</div>
+          <p class="ffc-name">Praveen Rathod</p>
+          <p class="ffc-role">Founder &amp; Community Lead</p>
+          <span class="ffc-alias"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Daanveer_protocol.exe</span>
+        </div>
+        <div class="ffc-body">
+          <p class="ffc-bio">Praveen defines the vision, strategy, and overall direction of the platform. He curates high-impact content, shares job and internship opportunities, and provides practical insights across AI, ML, Cybersecurity, and Full Stack Development.</p>
+          <p class="ffc-bio" style="margin-top:0.8rem">Known in the community as "Daanveer_protocol.exe," his consistent involvement and deep commitment to learners is the engine that drives the entire ecosystem forward. He believes in simplifying complex career paths and enabling individuals to make informed, confident decisions about their future in tech.</p>
+          <div class="ffc-tags">
+            <span class="ftag" style="background:rgba(240,192,64,0.12);color:#ffe082">Vision &amp; Strategy</span>
+            <span class="ftag" style="background:rgba(0,188,212,0.12);color:#26c6da">AI / ML</span>
+            <span class="ftag" style="background:rgba(255,107,107,0.12);color:#ff8a80">Cybersecurity</span>
+            <span class="ftag" style="background:rgba(92,107,192,0.12);color:#7986cb">Full Stack</span>
+            <span class="ftag" style="background:rgba(7,18,55,0.58);color:var(--ink2)">Career Guidance</span>
+          </div>
+        </div>
+      </div>
+      <div class="founder-full-card anim-fadeup d3">
+        <div class="ffc-accent acc-sn"></div>
+        <div class="ffc-top">
+          <div class="ffc-avatar av-sn">SU</div>
+          <p class="ffc-name">Snigdha Upadhyay</p>
+          <p class="ffc-role">Co-Founder &amp; Operations Lead</p>
+          <span class="ffc-alias"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83"/></svg>Operations Core</span>
+        </div>
+        <div class="ffc-body">
+          <p class="ffc-bio">Snigdha executes the vision and ensures the smooth functioning of the platform. Her focus lies in maintaining consistency, strengthening engagement, and enhancing the overall experience of the community.</p>
+          <p class="ffc-bio" style="margin-top:0.8rem">She works on streamlining communication, supporting individuals throughout their learning journey, and ensuring that valuable content and opportunities are delivered effectively. Through a structured and organized approach, she builds a reliable, growth-oriented environment where every member feels genuinely supported.</p>
+          <div class="ffc-tags">
+            <span class="ftag" style="background:rgba(0,188,212,0.12);color:#26c6da">Operations</span>
+            <span class="ftag" style="background:rgba(240,192,64,0.12);color:#ffe082">Engagement</span>
+            <span class="ftag" style="background:rgba(171,71,188,0.12);color:#ce93d8">Content Strategy</span>
+            <span class="ftag" style="background:rgba(7,18,55,0.58);color:var(--ink2)">Community Growth</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="foot-founders"></div>
+</div>
+
+<!-- ================================================================ DOMAINS PAGE ================================================================ -->
+<div class="pg" id="pg-domains">
+  <div id="nav-domains"></div>
+  <div class="page-hero">
+    <p class="page-eyebrow anim-slide d1">03 — Domains</p>
+    <h1 class="page-title anim-fadeup d2">Where we<br>guide you</h1>
+    <p class="page-sub anim-fadeup d3">Four high-demand, high-growth areas of technology. Mentorship, resources, job leads, and career clarity — curated specifically within each domain track.</p>
+  </div>
+  <div class="page-body">
+    <div class="dom-grid">
+      <div class="dom-card dc-ai anim-fadeup d1">
+        <div class="dom-icon di-ai">🤖</div>
+        <p class="dom-num">01 / Artificial Intelligence</p>
+        <p class="dom-title">Artificial Intelligence</p>
+        <p class="dom-desc">Concepts, tools, frameworks, and career paths in modern AI — from fundamentals and prompt engineering to applied systems, LLMs, and production-grade AI pipelines. We guide you from curious to capable. Stay ahead with the latest in generative AI and agent-based systems.</p>
+        <div class="dom-skills"><span class="dsk">Prompt Engineering</span><span class="dsk">LLMs</span><span class="dsk">AI Career Paths</span><span class="dsk">Applied AI</span><span class="dsk">GenAI Tools</span></div>
+      </div>
+      <div class="dom-card dc-ml anim-fadeup d2">
+        <div class="dom-icon di-ml">📊</div>
+        <p class="dom-num">02 / Machine Learning</p>
+        <p class="dom-title">Machine Learning</p>
+        <p class="dom-desc">Practical ML skills — model building, datasets, evaluation, and real internship opportunities. We break down the math and the implementation so you can build, deploy, and get hired in ML. From supervised learning to neural networks.</p>
+        <div class="dom-skills"><span class="dsk">Model Building</span><span class="dsk">Datasets</span><span class="dsk">Internships</span><span class="dsk">ML Research</span><span class="dsk">Python / PyTorch</span></div>
+      </div>
+      <div class="dom-card dc-cy anim-fadeup d3">
+        <div class="dom-icon di-cy">🔐</div>
+        <p class="dom-num">03 / Cybersecurity</p>
+        <p class="dom-title">Cybersecurity</p>
+        <p class="dom-desc">Ethical hacking, security fundamentals, certifications roadmap, CTF preparation, and real-world threat landscapes. Whether you want to defend or break things (legally), we have you covered — from CEH to OSCP.</p>
+        <div class="dom-skills"><span class="dsk">Ethical Hacking</span><span class="dsk">CTF Prep</span><span class="dsk">Certifications</span><span class="dsk">Network Security</span><span class="dsk">Penetration Testing</span></div>
+      </div>
+      <div class="dom-card dc-fs anim-fadeup d4">
+        <div class="dom-icon di-fs">⚡</div>
+        <p class="dom-num">04 / Full Stack Development</p>
+        <p class="dom-title">Full Stack Dev</p>
+        <p class="dom-desc">Frontend to backend — frameworks, databases, deployment, and job-ready project guidance. We help you build things that are real, ship them, and talk about them in interviews confidently. Modern stacks, real projects.</p>
+        <div class="dom-skills"><span class="dsk">React / Next.js</span><span class="dsk">Node / Express</span><span class="dsk">Databases</span><span class="dsk">Deployment</span><span class="dsk">System Design</span></div>
+      </div>
+    </div>
+  </div>
+  <div id="foot-domains"></div>
+</div>
+
+<!-- ================================================================ JOURNEY PAGE ================================================================ -->
+<div class="pg" id="pg-journey">
+  <div id="nav-journey"></div>
+  <div class="page-hero">
+    <p class="page-eyebrow anim-slide d1">04 — Journey</p>
+    <h1 class="page-title anim-fadeup d2">How we<br>got here</h1>
+    <p class="page-sub anim-fadeup d3">From a spark of an idea to a trusted mentorship platform — the milestones that shaped DaanveerXSni Sanatani Coders into what it is today.</p>
+  </div>
+  <div class="journey-wrap">
+    <div class="tl">
+      <div class="tl-item vis-h" id="ti1"><div class="tl-dot tl-d-gold"></div><span class="tl-badge yb-gold">Origin</span><p class="tl-h">The idea takes shape</p><p class="tl-p">Praveen recognized a consistent gap — passionate learners surrounded by noise, with no reliable space for structured, honest career guidance. The concept of a dedicated, mentor-led community was born from that frustration and a genuine desire to make a difference.</p></div>
+      <div class="tl-item vis-h" id="ti2"><div class="tl-dot tl-d-teal"></div><span class="tl-badge yb-teal">Foundation</span><p class="tl-h">DaanveerXSni Sanatani Coders is established</p><p class="tl-p">With Snigdha Upadhyay joining as Co-Founder and Operations Lead, the community was formally established. A defined mission, clear domain focus, and a commitment to impact over vanity metrics set the tone from day one.</p></div>
+      <div class="tl-item vis-h" id="ti3"><div class="tl-dot tl-d-coral"></div><span class="tl-badge yb-coral">Growth</span><p class="tl-h">Mentorship, opportunities, consistency</p><p class="tl-p">The community began actively curating job leads, internship opportunities, and domain-specific knowledge across AI, ML, Cybersecurity, and Full Stack Development. Both founders directly involved in guiding members through every step.</p></div>
+      <div class="tl-item vis-h" id="ti4"><div class="tl-dot tl-d-navy"></div><span class="tl-badge yb-navy">Now</span><p class="tl-h">A trusted space for serious learners</p><p class="tl-p">The community continues to grow as a trusted platform where learners make confident, informed career decisions — backed by real mentorship, curated resources, and a structured approach to long-term growth in technology.</p></div>
+    </div>
+    <div class="ach-strip">
+      <div class="ach-box anim-scale d1"><p class="ach-big an-gold">4</p><p class="ach-lbl">tech domains with dedicated mentorship</p></div>
+      <div class="ach-box anim-scale d2"><p class="ach-big an-teal">2</p><p class="ach-lbl">founders with complementary expertise</p></div>
+      <div class="ach-box anim-scale d3"><p class="ach-big an-coral">100%</p><p class="ach-lbl">genuine guidance, zero filler</p></div>
+      <div class="ach-box anim-scale d4"><p class="ach-big an-navy">∞</p><p class="ach-lbl">learner potential, our north star</p></div>
+    </div>
+  </div>
+  <div id="foot-journey"></div>
+</div>
+
+<!-- ================================================================ CONNECT PAGE ================================================================ -->
+<div class="pg" id="pg-connect">
+  <div id="nav-connect"></div>
+  <div class="page-hero">
+    <p class="page-eyebrow anim-slide d1">05 — Connect</p>
+    <h1 class="page-title anim-fadeup d2">Ready to grow<br>with us?</h1>
+    <p class="page-sub anim-fadeup d3">Whether you are seeking career direction, internship opportunities, or a community of driven learners — reach out and start moving forward. We respond personally.</p>
+  </div>
+  <div class="connect-wrap">
+    <div class="connect-grid-sub">
+      <a class="con-card cc-ig anim-fadeup d1" href="https://www.instagram.com/daanveerxsni_sanatani_coders?igsh=MWZlY3BvMnByNGxoNg==" target="_blank">
+        <span class="con-arrow">↗</span>
+        <div class="con-icon ci-ig"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e91e8c" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#e91e8c" stroke="none"/></svg></div>
+        <p class="con-title">Instagram</p>
+        <p class="con-handle">@daanveerxsni_sanatani_coders</p>
+        <p class="con-desc">Follow for daily updates, curated opportunities, domain insights, and community highlights. This is where the action happens — job leads, tips, and community wins posted regularly.</p>
+      </a>
+      <a class="con-card cc-wa anim-fadeup d2" href="https://chat.whatsapp.com/CHXaIUi51GrLI4ytV8Vptc" target="_blank">
+        <span class="con-arrow">↗</span>
+        <div class="con-icon ci-wa"><svg width="22" height="22" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+        <p class="con-title">WhatsApp</p>
+        <p class="con-handle">Direct message</p>
+        <p class="con-desc">Chat directly with the community for quick questions, mentorship requests, or to explore how we can guide your career path. Faster responses for urgent queries.</p>
+      </a>
+      <a class="con-card cc-em anim-fadeup d3" href="mailto:suryaputrakarn24680@gmail.com">
+        <span class="con-arrow">↗</span>
+        <div class="con-icon ci-em"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1976d2" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></div>
+        <p class="con-title">Email</p>
+        <p class="con-handle">suryaputrakarn24680@gmail.com</p>
+        <p class="con-desc">For detailed queries, collaboration proposals, or formal outreach. We respond to every message with the attention it deserves — no auto-replies, ever.</p>
+      </a>
+      <a class="con-card cc-tg anim-fadeup d4" href="https://t.me/+FL8KI9sOIQw2MTZl" target="_blank">
+        <span class="con-arrow">↗</span>
+        <div class="con-icon ci-tg"><svg width="22" height="22" viewBox="0 0 24 24" fill="#2196f3"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.5l-2.95-.924c-.64-.203-.658-.64.136-.954l11.57-4.46c.535-.194 1.002.13.968.059z"/></svg></div>
+        <p class="con-title">Telegram</p>
+        <p class="con-handle">Join our Telegram channel</p>
+        <p class="con-desc">Get instant updates, resources, and connect with fellow learners on Telegram. Real-time career opportunities and domain insights — join the growing community.</p>
+      </a>
+      <div class="con-card cc-full anim-fadeup" style="animation-delay:0.5s">
+        <div class="con-icon ci-g"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4a800" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <p class="con-title">Join the Community</p>
+        <p class="con-handle">Open to all learners</p>
+        <p class="con-desc">DaanveerXSni Sanatani Coders is a space for anyone serious about building a career in tech. No prerequisites — just ambition and a willingness to grow alongside like-minded people.</p>
+        <div style="margin-top:1.2rem;display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn btn-ig sparkle-btn" href="https://www.instagram.com/daanveerxsni_sanatani_coders?igsh=MWZlY3BvMnByNGxoNg==" target="_blank" style="font-size:12px;padding:8px 16px">📸 Follow on Instagram →</a>
+          <a class="btn btn-ghost" href="https://chat.whatsapp.com/CHXaIUi51GrLI4ytV8Vptc" target="_blank" style="font-size:12px;padding:8px 16px">WhatsApp →</a>
+          <a class="btn btn-ghost" href="https://t.me/+FL8KI9sOIQw2MTZl" target="_blank" style="font-size:12px;padding:8px 16px">Telegram →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="foot-connect"></div>
+</div>
+
+
+<script src="script.js"></script>
+</body>
+</html>
